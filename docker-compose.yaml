@@ -1,0 +1,8 @@
+services:
+  monitor:
+    image: ghcr.io/jnkck92/monitor:latest
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    environment:
+      - BACKEND_HOST=192.168.178.70:8081
