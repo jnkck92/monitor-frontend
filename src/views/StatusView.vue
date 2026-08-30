@@ -6,6 +6,7 @@ import AlarmView from './AlarmView.vue'
 
 const { monitor, fetchError, loading } = useStatus()
 const connectionOk = computed(() => fetchError.value === null)
+
 </script>
 
 <template>

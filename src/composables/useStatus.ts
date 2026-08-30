@@ -46,6 +46,7 @@ export function useStatus() {
 
     // SSE not available or broken — fall back to polling
     es.onerror = () => {
+      fetchError.value = 'SSE-Verbindung unterbrochen'
       es?.close()
       es = null
       startPolling()

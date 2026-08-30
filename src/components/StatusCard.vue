@@ -8,7 +8,7 @@ withDefaults(defineProps<{
 </script>
 
 <template>
-  <div class="card" :class="{ inactive: !unit.alerted }" :style="{ borderLeftColor: unit.radioStatus.color }">
+  <div class="card" :class="{ inactive: !unit.alerted }" :style="{ '--status-color': unit.radioStatus.color }">
     <div class="info">
       <span class="name">{{ unit.name }}</span>
       <span class="type">{{ unit.callSign }}</span>
@@ -29,7 +29,7 @@ withDefaults(defineProps<{
   padding: clamp(0.4rem, 1.5vh, 1rem) clamp(0.8rem, 2vw, 2rem);
   border-radius: var(--border-radius);
   border: 1px solid var(--border-faint);
-  border-left: 4px solid;
+  /*box-shadow: 0 0 0 2px color-mix(in srgb, var(--status-color) 25%, transparent);*/
   overflow: hidden;
   background-color: var(--bg-tile);
   background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
@@ -39,7 +39,7 @@ withDefaults(defineProps<{
 .info {
   display: flex;
   flex-direction: column;
-  gap: 0.15em;
+  gap: 0.2em;
   flex: 1;
   min-width: 0;
   overflow: hidden;

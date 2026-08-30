@@ -32,6 +32,7 @@ const { time, date } = useClock()
   background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
   background-size: 18px 18px;
   border-bottom: 1px solid var(--border-tile);
+  border-top: 2px solid #2563eb
 }
 
 .left {
