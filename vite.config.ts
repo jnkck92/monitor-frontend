@@ -13,11 +13,11 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://192.168.178.70:8081',
+        target: 'http://localhost:8080',
         changeOrigin: true
       },
       '/mock': {
-        target: 'http://192.168.178.70:8081',
+        target: 'http://localhost:8080',
         changeOrigin: true
       }
     }

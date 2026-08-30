@@ -13,6 +13,7 @@ export interface Alarm {
   address: string | null
   label: string
   color: string
+  alarmDate?: number
 }
 
 export interface RadioStatus {

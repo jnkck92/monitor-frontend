@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-// import { useElapsed } from '@/composables/useElapsed'
+import { useElapsed } from '@/composables/useElapsed'
 import type { Alarm } from '@/types/api'
 
 const props = defineProps<{ alarm: Alarm }>()
@@ -12,7 +12,6 @@ const parsedTitle = computed(() => {
   return { code: null, description: title }
 })
 
-/*
 const alarmTime = computed(() => {
   if (!props.alarm.alarmDate) return null
   return new Date(props.alarm.alarmDate * 1000).toLocaleTimeString('de-DE', {
@@ -20,8 +19,8 @@ const alarmTime = computed(() => {
   })
 })
 
-const { elapsed } = useElapsed(() => props.alarm.alarmDate)
-*/
+const { elapsed } = useElapsed(() => props.alarm.alarmDate ?? null)
+
 </script>
 
 <template>
@@ -34,6 +33,12 @@ const { elapsed } = useElapsed(() => props.alarm.alarmDate)
       </div>
       <div class="keyword">{{ parsedTitle.description }}</div>
       <div v-if="alarm.address" class="address">{{ alarm.address }}</div>
+    </div>
+    <div v-if="alarm.alarmDate" class="right">
+      <div class="meta">
+        <span class="elapsed">{{ elapsed }}</span>
+        <span class="alarm-time">ALARM {{ alarmTime }}</span>
+      </div>
     </div>
   </header>
 </template>
@@ -117,6 +122,17 @@ const { elapsed } = useElapsed(() => props.alarm.alarmDate)
   line-height: 1;
 }
 
-.elapsed { color: var(--color-elapsed); }
+.elapsed {
+  font-size: clamp(2rem, 5vw, 5rem);
+  font-weight: 900;
+  color: var(--color-elapsed);
+  font-variant-numeric: tabular-nums;
+}
+
+.alarm-time {
+  font-size: clamp(0.6rem, 1.2vw, 1rem);
+  letter-spacing: 0.12em;
+  color: var(--text-secondary);
+}
 .no-rule { color: var(--color-elapsed); font-weight: 800; letter-spacing: 0.1em; }
 </style>
