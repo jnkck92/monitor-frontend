@@ -1,11 +1,16 @@
 import { ref, onUnmounted } from 'vue'
 import type { Monitor } from '@/types/api'
-
-const POLL_INTERVAL_MS = 5_000
-const STATUS_URL = '/api/v1/monitor/status'
-const STREAM_URL = '/api/v1/monitor/stream'
+import { useRoute } from 'vue-router'
 
 export function useStatus() {
+
+  const route = useRoute()
+  const slug = route.params.slug as string
+
+  const POLL_INTERVAL_MS = 5_000
+  const STATUS_URL = `/api/v1/monitor/${slug}/status`
+  const STREAM_URL = `/api/v1/monitor/${slug}/stream`
+
   const monitor = ref<Monitor | null>(null)
   const fetchError = ref<string | null>(null)
   const loading = ref(true)
