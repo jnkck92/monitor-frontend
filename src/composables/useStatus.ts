@@ -9,13 +9,11 @@ export function useStatus() {
 
   const POLL_INTERVAL_MS = 5_000
   const STATUS_URL = `/api/v1/monitor/${slug}/status`
-  const STREAM_URL = `/api/v1/monitor/${slug}/stream`
 
   const monitor = ref<Monitor | null>(null)
   const fetchError = ref<string | null>(null)
   const loading = ref(true)
 
-  let es: EventSource | null = null
   let intervalId: ReturnType<typeof setInterval> | null = null
 
   function startPolling() {
@@ -35,33 +33,9 @@ export function useStatus() {
     intervalId = setInterval(fetchStatus, POLL_INTERVAL_MS)
   }
 
-  if (typeof EventSource !== 'undefined') {
-    es = new EventSource(STREAM_URL)
-
-    es.addEventListener('state', (event: MessageEvent) => {
-      try {
-        monitor.value = JSON.parse(event.data) as Monitor
-        fetchError.value = null
-      } catch {
-        fetchError.value = 'Ungültige Daten vom Server'
-      } finally {
-        loading.value = false
-      }
-    })
-
-    // SSE not available or broken — fall back to polling
-    es.onerror = () => {
-      fetchError.value = 'SSE-Verbindung unterbrochen'
-      es?.close()
-      es = null
-      startPolling()
-    }
-  } else {
-    startPolling()
-  }
+  startPolling()
 
   onUnmounted(() => {
-    es?.close()
     if (intervalId !== null) clearInterval(intervalId)
   })
 
