@@ -9,9 +9,6 @@ const { time, date } = useClock()
   <div class="header-wrapper">
     <div class="left">
       <div class="name">{{ departmentName }}</div>
-      <div class="conn" :class="connectionOk ? 'ok' : 'err'">
-        {{ connectionOk ? '● VERBUNDEN' : '● KEINE VERBINDUNG' }}
-      </div>
     </div>
     <div class="clock-wrapper">
       <div class="clock">{{ time }}</div>
@@ -49,17 +46,6 @@ const { time, date } = useClock()
   color: var(--text-bright);
   overflow-wrap: break-word;
 }
-
-.conn {
-  font-family: 'Courier New', 'Consolas', monospace;
-  font-size: clamp(0.55rem, 1vw, 0.9rem);
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.conn.ok  { color: #1e9e4a; }
-.conn.err { color: #c0392b; }
 
 .clock-wrapper { text-align: right; flex-shrink: 0; }
 

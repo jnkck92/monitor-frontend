@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Unit } from '@/types/api'
+import Badge from '@/components/BadgeComponent.vue'
 
 withDefaults(defineProps<{
   unit: Unit
@@ -10,12 +11,12 @@ withDefaults(defineProps<{
 <template>
   <div class="card" :class="{ inactive: !unit.alerted }" :style="{ '--status-color': unit.radioStatus.color }">
     <div class="info">
+      <Badge>{{ unit.callSign }}</Badge>
       <span class="name">{{ unit.name }}</span>
-      <span class="type">{{ unit.callSign }}</span>
     </div>
-    <span v-if="unit.radioStatus !== null" class="status" :style="{ color: unit.radioStatus.color }">
+    <Badge v-if="unit.radioStatus !== null" :color="unit.radioStatus.color">
       {{ unit.radioStatus.label }}
-    </span>
+    </Badge>
   </div>
 </template>
 
@@ -29,51 +30,33 @@ withDefaults(defineProps<{
   padding: clamp(0.4rem, 1.5vh, 1rem) clamp(0.8rem, 2vw, 2rem);
   border-radius: var(--border-radius);
   border: 1px solid var(--border-faint);
-  /*box-shadow: 0 0 0 2px color-mix(in srgb, var(--status-color) 25%, transparent);*/
   overflow: hidden;
   background-color: var(--bg-tile);
   background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
   background-size: 18px 18px;
+  container-type: size; /* macht die Card-Höhe für cqh in .name verfügbar */
 }
 
 .info {
   display: flex;
-  flex-direction: column;
-  gap: 0.2em;
+  flex-direction: row;
+  align-items: center;
+  gap: 4em;
   flex: 1;
   min-width: 0;
   overflow: hidden;
 }
 
 .name {
-  font-size: clamp(1rem, 4vh, 5rem);
+  font-size: 100cqh;
+  line-height: 1;
   font-weight: 700;
   color: var(--text-bright);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.type {
-  font-family: 'Courier New', 'Consolas', monospace;
-  font-size: clamp(0.5rem, 2vh, 2.5rem);
-  letter-spacing: 0.05em;
-  color: var(--text-secondary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.status {
-  font-family: 'Courier New', monospace;
-  font-size: clamp(0.7rem, 2.5vh, 3rem);
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  flex-shrink: 0;
-  padding: 0.15em 0.5em;
-  background: color-mix(in srgb, currentColor 15%, transparent);
-  border: 1px solid color-mix(in srgb, currentColor 40%, transparent);
-  border-radius: var(--border-radius);
+  flex: 1;
+  min-width: 0;
 }
 
 .card.inactive {

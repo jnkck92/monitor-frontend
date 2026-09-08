@@ -14,6 +14,11 @@ export function useStatus() {
   const fetchError = ref<string | null>(null)
   const loading = ref(true)
 
+  // Zeitpunkt (Unix-Sekunden) des jeweils letzten Wechsels in den Verbunden-/Getrennt-Zustand
+  const connectedSince = ref<number | null>(null)
+  const disconnectedSince = ref<number | null>(null)
+  let wasConnected: boolean | null = null
+
   let intervalId: ReturnType<typeof setInterval> | null = null
 
   function startPolling() {
@@ -26,6 +31,13 @@ export function useStatus() {
       } catch (e) {
         fetchError.value = e instanceof Error ? e.message : 'Unbekannter Fehler'
       } finally {
+        const ok = fetchError.value === null
+        if (wasConnected !== ok) {
+          const now = Math.floor(Date.now() / 1000)
+          if (ok) connectedSince.value = now
+          else disconnectedSince.value = now
+          wasConnected = ok
+        }
         loading.value = false
       }
     }
@@ -39,5 +51,5 @@ export function useStatus() {
     if (intervalId !== null) clearInterval(intervalId)
   })
 
-  return { monitor, fetchError, loading }
+  return { monitor, fetchError, loading, connectedSince, disconnectedSince }
 }
