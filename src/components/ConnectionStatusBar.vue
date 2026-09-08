@@ -14,7 +14,7 @@ const version = __APP_VERSION__
   <div class="status-bar" :class="connectionOk ? 'ok' : 'err'">
     <span class="dot" />
     <span class="label">{{ connectionOk ? 'Verbunden' : 'Keine Verbindung' }}</span>
-    <span class="since">seit {{ elapsed }}</span>
+    <span v-if="!connectionOk" class="since">seit {{ elapsed }}</span>
     <span class="version">v{{ version }}</span>
   </div>
 </template>
@@ -50,11 +50,11 @@ const version = __APP_VERSION__
 .since {
   color: var(--text-secondary);
   font-weight: 400;
-  margin-left: auto;
 }
+
 .version {
-  color: var(--text-secondary);
+  color: var(--text-faint);
   font-weight: 400;
-  margin-left: 1em;
+  margin-left: auto;
 }
 </style>
