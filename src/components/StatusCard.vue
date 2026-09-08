@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Unit } from '@/types/api'
-import Badge from '@/components/Badge.vue'
+import Badge from '@/components/BadgeComponent.vue'
 
 withDefaults(defineProps<{
   unit: Unit
