@@ -7,6 +7,7 @@ const props = defineProps<{
 }>()
 
 const { elapsed } = useElapsed(() => props.since)
+const version = __APP_VERSION__
 </script>
 
 <template>
@@ -14,6 +15,7 @@ const { elapsed } = useElapsed(() => props.since)
     <span class="dot" />
     <span class="label">{{ connectionOk ? 'Verbunden' : 'Keine Verbindung' }}</span>
     <span class="since">seit {{ elapsed }}</span>
+    <span class="version">v{{ version }}</span>
   </div>
 </template>
 
@@ -49,5 +51,10 @@ const { elapsed } = useElapsed(() => props.since)
   color: var(--text-secondary);
   font-weight: 400;
   margin-left: auto;
+}
+.version {
+  color: var(--text-secondary);
+  font-weight: 400;
+  margin-left: 1em;
 }
 </style>
