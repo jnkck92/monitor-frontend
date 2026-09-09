@@ -26,8 +26,6 @@ const { time, date } = useClock()
   gap: 0.5rem;
   padding: clamp(0.8rem, 1.5vw, 1.5rem) clamp(0.8rem, 2vw, 2rem);
   background-color: var(--bg-surface);
-  background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-  background-size: 18px 18px;
   border-bottom: 1px solid var(--border-tile);
   border-top: 2px solid #2563eb
 }

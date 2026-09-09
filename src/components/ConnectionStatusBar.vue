@@ -1,12 +1,19 @@
 <script setup lang="ts">
-import { useElapsed } from '@/composables/useElapsed'
+import { computed } from 'vue'
 
 const props = defineProps<{
   connectionOk: boolean
   since: number | null
 }>()
 
-const { elapsed } = useElapsed(() => props.since)
+const sinceFormatted = computed(() => {
+  if (props.since === null) return null
+  return new Date(props.since * 1000).toLocaleString('de-DE', {
+    day: '2-digit', month: '2-digit', year: 'numeric',
+    hour: '2-digit', minute: '2-digit', second: '2-digit',
+  })
+})
+
 const version = __APP_VERSION__
 </script>
 
@@ -14,7 +21,7 @@ const version = __APP_VERSION__
   <div class="status-bar" :class="connectionOk ? 'ok' : 'err'">
     <span class="dot" />
     <span class="label">{{ connectionOk ? 'Verbunden' : 'Keine Verbindung' }}</span>
-    <span v-if="!connectionOk" class="since">seit {{ elapsed }}</span>
+    <span v-if="!connectionOk" class="since">seit {{ sinceFormatted }}</span>
     <span class="version">v{{ version }}</span>
   </div>
 </template>

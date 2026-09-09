@@ -4,12 +4,12 @@ import Badge from '@/components/BadgeComponent.vue'
 
 withDefaults(defineProps<{
   unit: Unit
-  isOwn?: boolean
-}>(), { isOwn: false })
+  showAlertState?: boolean
+}>(), { showAlertState: false })
 </script>
 
 <template>
-  <div class="card" :class="{ inactive: !unit.alerted }" :style="{ '--status-color': unit.radioStatus.color }">
+  <div class="card" :class="{ inactive: showAlertState && !unit.alerted, own: unit.ownVehicle }" :style="{ '--status-color': unit.radioStatus.color }">
     <div class="info">
       <Badge>{{ unit.callSign }}</Badge>
       <span class="name">{{ unit.name }}</span>
@@ -32,25 +32,28 @@ withDefaults(defineProps<{
   border: 1px solid var(--border-faint);
   overflow: hidden;
   background-color: var(--bg-tile);
-  background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-  background-size: 18px 18px;
-  container-type: size; /* macht die Card-Höhe für cqh in .name verfügbar */
+  container-type: size;
+}
+
+.card.own {
+  border: 1px solid var(--border-own);
+  background-color: color-mix(in srgb, white 4%, var(--bg-tile));
 }
 
 .info {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 4em;
+  gap: clamp(0.5em, 3cqw, 4em);
   flex: 1;
   min-width: 0;
   overflow: hidden;
 }
 
 .name {
-  font-size: 100cqh;
+  font-size: 200cqh;
   line-height: 1;
-  font-weight: 700;
+  font-weight: 400;
   color: var(--text-bright);
   white-space: nowrap;
   overflow: hidden;
@@ -63,4 +66,7 @@ withDefaults(defineProps<{
   opacity: 0.2;
   filter: grayscale(60%);
 }
+
+.card.type-person  { border-left: 3px solid var(--color-person); }
+.card.type-vehicle { border-left: 3px solid var(--color-vehicle); }
 </style>

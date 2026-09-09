@@ -12,32 +12,39 @@ const parsedTitle = computed(() => {
   return { code: null, description: title }
 })
 
+const alarmDateObj = computed(() => props.alarm.timestamp ? new Date(props.alarm.timestamp) : null)
+
 const alarmTime = computed(() => {
-  if (!props.alarm.alarmDate) return null
-  return new Date(props.alarm.alarmDate * 1000).toLocaleTimeString('de-DE', {
+  if (!alarmDateObj.value) return null
+  return alarmDateObj.value.toLocaleTimeString('de-DE', {
     hour: '2-digit', minute: '2-digit', second: '2-digit',
   })
 })
 
-const { elapsed } = useElapsed(() => props.alarm.alarmDate ?? null)
-
+const { elapsed } = useElapsed(() =>
+  alarmDateObj.value ? Math.floor(alarmDateObj.value.getTime() / 1000) : null
+)
 </script>
 
 <template>
   <header class="header">
-    <div class="left">
-      <div class="badge">
-        {{ parsedTitle.code }}
-        <span v-if="alarm.label"> · {{ alarm.label }}</span>
-        <span v-else-if="parsedTitle.code" class="no-rule">Keine AAO hinterlegt</span>
-      </div>
+    <div class="priority-bar" :style="{ backgroundColor: alarm.color }">
+      <span v-if="parsedTitle.code">{{ parsedTitle.code }}</span>
+      <span v-if="alarm.label"> · {{ alarm.label }}</span>
+      <span v-else-if="parsedTitle.code" class="no-rule">Keine AAO hinterlegt</span>
+    </div>
+
+    <div class="body">
       <div class="keyword">{{ parsedTitle.description }}</div>
       <div v-if="alarm.address" class="address">{{ alarm.address }}</div>
     </div>
-    <div v-if="alarm.alarmDate" class="right">
-      <div class="meta">
-        <span class="elapsed">{{ elapsed }}</span>
-        <span class="alarm-time">ALARM {{ alarmTime }}</span>
+
+    <div v-if="alarm.timestamp" class="kpi-strip">
+      <div class="kpi">
+        <span class="kpi-value elapsed">{{ elapsed }}</span>
+      </div>
+      <div class="kpi">
+        <span class="kpi-value">{{ alarmTime }}</span>
       </div>
     </div>
   </header>
@@ -46,93 +53,75 @@ const { elapsed } = useElapsed(() => props.alarm.alarmDate ?? null)
 <style scoped>
 .header {
   display: flex;
-  align-items: stretch;
+  flex-direction: column;
   background-color: var(--bg-surface);
-  background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-  background-size: 18px 18px;
   border-bottom: 1px solid var(--border-tile);
-  border-top: 4px solid v-bind('alarm.color');
 }
 
-.left {
-  flex: 1;
-  padding: 1rem;
+.priority-bar {
+  font-family: 'Courier New', 'Consolas', monospace;
+  font-size: clamp(0.9rem, 1.8vw, 1.6rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #fff;
+  padding: 0.4rem 1rem;
+}
+
+.body {
+  padding: clamp(0.8rem, 1.5vw, 1.5rem) 1rem;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  gap: 0.15rem;
-}
-
-.badge {
-  font-family: 'Courier New', 'Consolas', monospace;
-  font-size: clamp(0.7rem, 2.4vw, 2.6rem);
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: v-bind('alarm.color');
-  margin-bottom: 0.2rem;
+  gap: 0.2rem;
 }
 
 .keyword {
-  font-size: clamp(2rem, 5.5vw, 5rem);
+  font-size: clamp(2rem, 5.5vw, 7rem);
   font-weight: 900;
   color: var(--text-bright);
   line-height: 1;
 }
 
 .address {
-  font-size: clamp(0.8rem, 3vw, 3rem);
-  color: var(--text-bright);
-  margin-top: 0.2rem;
+  font-size: clamp(0.9rem, 2.5vw, 2.2rem);
+  color: var(--text-secondary);
 }
 
-.right {
+.kpi-strip {
   display: flex;
-  flex-direction: column;
-  gap: clamp(0.5rem, 1.5vh, 1.5rem);
-  align-items: flex-end;
+  border-top: 1px solid var(--border-tile);
+}
+
+.kpi {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
   justify-content: center;
-  padding: clamp(0.8rem, 1.5vw, 1.5rem) clamp(1rem, 2.5vw, 2.5rem);
-  border-left: 1px solid var(--border-tile);
-  min-width: max-content;
+  gap: 0.4em;
+  padding: clamp(0.25rem, 0.6vh, 0.5rem);
+  border-right: 1px solid var(--border-tile);
 }
 
-.meta {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 0.1em;
-}
+.kpi:last-child { border-right: none; }
 
-.label {
+.kpi-label {
   font-family: 'Courier New', 'Consolas', monospace;
-  font-size: clamp(0.65rem, 1vw, 1rem);
-  letter-spacing: 0.12em;
+  font-size: clamp(0.55rem, 0.9vw, 0.75rem);
   text-transform: uppercase;
+  letter-spacing: 0.08em;
   color: var(--text-subtle);
 }
 
-.val {
+.kpi-value {
   font-family: 'Courier New', 'Consolas', monospace;
-  font-size: clamp(1.5rem, 3.5vw, 4rem);
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  color: var(--text-bright);
-  letter-spacing: 0.05em;
-  line-height: 1;
-}
-
-.elapsed {
-  font-size: clamp(2rem, 5vw, 5rem);
+  font-size: clamp(0.9rem, 1.8vw, 1.4rem);
   font-weight: 900;
-  color: var(--color-elapsed);
+  color: var(--text-bright);
   font-variant-numeric: tabular-nums;
 }
 
-.alarm-time {
-  font-size: clamp(0.6rem, 1.2vw, 1rem);
-  letter-spacing: 0.12em;
-  color: var(--text-secondary);
-}
-.no-rule { color: var(--color-elapsed); font-weight: 800; letter-spacing: 0.1em; }
+.kpi-value.elapsed { color: var(--color-elapsed); }
+
+.no-rule { color: #fff; font-weight: 800; }
 </style>

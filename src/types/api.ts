@@ -13,7 +13,7 @@ export interface Alarm {
   address: string | null
   label: string
   color: string
-  alarmDate?: number
+  timestamp?: string
 }
 
 export interface RadioStatus {
@@ -27,4 +27,6 @@ export interface Unit {
 	callSign: string
 	alerted: boolean
 	radioStatus: RadioStatus
+	ownVehicle: boolean
+	type?: 'person' | 'vehicle'
 }

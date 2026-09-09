@@ -15,7 +15,6 @@ withDefaults(defineProps<{
 .badge {
   font-family: 'Courier New', 'Consolas', monospace;
   font-weight: 700;
-  letter-spacing: 0.1em;
   flex-shrink: 0;
   padding: 0.15em 0.5em;
   background: color-mix(in srgb, currentColor 15%, transparent);

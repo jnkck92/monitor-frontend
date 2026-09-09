@@ -5,7 +5,6 @@
   --bg-tile:           #0e1420;
   --bg-tile-active:    #131a28;
   --bg-badge:          #111827;
-  --bg-own-inactive:   #ffffff22;
 
   --border-tile:       #2a2a2a;
   --border-faint:      #1e1e1e;
@@ -18,13 +17,21 @@
   --text-muted:        #555555;
   --text-subtle:       #888888;
   --text-faint:        #484848;
-  --text-own-inactive: #ffffff66;
 
   --color-ok:          #22c55e;
   --color-error:       #f87171;
   --color-elapsed:     #ffe066;
 
   --border-radius: 0.5rem;
+
+  --fs-xs:  clamp(0.6rem, 1vw, 0.9rem);
+  --fs-sm:  clamp(0.8rem, 1.4vw, 1.3rem);
+  --fs-md:  clamp(1rem, 2.2vw, 2rem);
+  --fs-lg:  clamp(1.5rem, 3.5vw, 4rem);
+  --fs-xl:  clamp(2rem, 5.5vw, 7rem);
+
+  --color-person:  #60a5fa;
+  --color-vehicle: #a78bfa;
 
 }
 

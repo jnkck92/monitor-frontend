@@ -1,25 +1,25 @@
-import { ref, onUnmounted } from 'vue'
+import { ref, computed, onUnmounted } from 'vue'
 import type { Monitor } from '@/types/api'
 import { useRoute } from 'vue-router'
+import { useConnectionTracking } from './useConnectionTracking'
 
 export function useStatus() {
-
   const route = useRoute()
   const slug = route.params.slug as string
-  const vehicle = route.query.vehicle
+  const vehicleParam = route.query.vehicle
+  const vehicle = Array.isArray(vehicleParam) ? vehicleParam[0] : vehicleParam
 
   const POLL_INTERVAL_MS = 5_000
-  const STATUS_URL = `/api/v1/monitor/${slug}/status${
-    vehicle ? `?vehicle=${encodeURIComponent(vehicle as string)}` : ''
+    const STATUS_URL = `/api/v1/monitor/${slug}/status${
+    vehicle ? `?vehicle=${encodeURIComponent(vehicle)}` : ''
   }`
 
   const monitor = ref<Monitor | null>(null)
   const fetchError = ref<string | null>(null)
   const loading = ref(true)
 
-  const connectedSince = ref<number | null>(null)
-  const disconnectedSince = ref<number | null>(null)
-  let wasConnected: boolean | null = null
+  const connectionOk = computed(() => fetchError.value === null)
+  const { connectedSince, disconnectedSince } = useConnectionTracking(connectionOk)
 
   let intervalId: ReturnType<typeof setInterval> | null = null
 
@@ -33,13 +33,6 @@ export function useStatus() {
       } catch (e) {
         fetchError.value = e instanceof Error ? e.message : 'Unbekannter Fehler'
       } finally {
-        const ok = fetchError.value === null
-        if (wasConnected !== ok) {
-          const now = Math.floor(Date.now() / 1000)
-          if (ok) connectedSince.value = now
-          else disconnectedSince.value = now
-          wasConnected = ok
-        }
         loading.value = false
       }
     }

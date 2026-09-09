@@ -2,42 +2,50 @@
 import { computed } from 'vue'
 import { useStatus } from '@/composables/useStatus'
 import StandbyView from './StandbyView.vue'
+import StateScreen from '@/components/StateScreen.vue'
 import AlarmView from './AlarmView.vue'
 import ConnectionStatusBar from '@/components/ConnectionStatusBar.vue'
 
 const { monitor, fetchError, loading, connectedSince, disconnectedSince } = useStatus()
 const connectionOk = computed(() => fetchError.value === null)
 const connectionSince = computed(() => connectionOk.value ? connectedSince.value : disconnectedSince.value)
+
+const units = computed(() => {
+  if (!monitor.value) return []
+  return [
+    ...monitor.value.vehicles.map(v => ({ ...v, type: 'vehicle' as const })),
+    ...monitor.value.persons.map(p => ({ ...p, type: 'person' as const })),
+  ]
+})
+
 </script>
 
 <template>
-  <div class="app-shell">
-    <div class="content">
-      <div v-if="loading && !monitor" class="state-screen">Verbinde…</div>
 
-      <AlarmView
-        v-else-if="monitor?.alarm"
-        :alarm="monitor.alarm"
-        :persons="monitor.persons"
-        :vehicles="monitor.vehicles"
-      />
+  <div class="app-shell">
+
+    <div class="content">
+      <StateScreen v-if="loading && !monitor">Verbinde…</StateScreen>
+
+      <AlarmView v-else-if="monitor?.alarm" :alarm="monitor.alarm" :units="units" />
 
       <StandbyView
         v-else-if="monitor"
         :department-name="monitor.departmentName"
-        :persons="monitor.persons"
-        :vehicles="monitor.vehicles"
+        :units="units"
         :connection-ok="connectionOk"
       />
 
-      <div v-else class="state-screen error">
+      <StateScreen v-else variant="error">
         <p>Keine Verbindung zum Server</p>
         <p class="hint">Erneuter Versuch läuft automatisch …</p>
-      </div>
+      </StateScreen>
+
     </div>
 
     <ConnectionStatusBar :connection-ok="connectionOk" :since="connectionSince" />
   </div>
+
 </template>
 
 <style scoped>
@@ -54,22 +62,7 @@ const connectionSince = computed(() => connectionOk.value ? connectedSince.value
   overflow: hidden;
 }
 
-.state-screen {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  font-size: 2rem;
-  color: var(--text-secondary);
-  background: var(--bg-surface);
-}
-
-.state-screen.error {
-  color: #e74c3c;
-  flex-direction: column;
-}
-
-.state-screen.error .hint {
+.hint {
   font-size: 1rem;
   color: var(--text-secondary);
   margin-top: 0.5rem;
