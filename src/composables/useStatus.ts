@@ -6,15 +6,17 @@ export function useStatus() {
 
   const route = useRoute()
   const slug = route.params.slug as string
+  const vehicle = route.query.vehicle
 
   const POLL_INTERVAL_MS = 5_000
-  const STATUS_URL = `/api/v1/monitor/${slug}/status`
+  const STATUS_URL = `/api/v1/monitor/${slug}/status${
+    vehicle ? `?vehicle=${encodeURIComponent(vehicle as string)}` : ''
+  }`
 
   const monitor = ref<Monitor | null>(null)
   const fetchError = ref<string | null>(null)
   const loading = ref(true)
 
-  // Zeitpunkt (Unix-Sekunden) des jeweils letzten Wechsels in den Verbunden-/Getrennt-Zustand
   const connectedSince = ref<number | null>(null)
   const disconnectedSince = ref<number | null>(null)
   let wasConnected: boolean | null = null
