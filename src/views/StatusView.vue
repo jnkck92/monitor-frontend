@@ -30,7 +30,10 @@ const connectionSince = computed(() => connectionOk.value ? connectedSince.value
         :connection-ok="connectionOk"
       />
 
-      <div v-else class="state-screen error">Fehler: {{ fetchError }}</div>
+      <div v-else class="state-screen error">
+        <p>Keine Verbindung zum Server</p>
+        <p class="hint">Erneuter Versuch läuft automatisch …</p>
+      </div>
     </div>
 
     <ConnectionStatusBar :connection-ok="connectionOk" :since="connectionSince" />
@@ -61,5 +64,14 @@ const connectionSince = computed(() => connectionOk.value ? connectedSince.value
   background: var(--bg-surface);
 }
 
-.state-screen.error { color: #e74c3c; }
+.state-screen.error {
+  color: #e74c3c;
+  flex-direction: column;
+}
+
+.state-screen.error .hint {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+}
 </style>
