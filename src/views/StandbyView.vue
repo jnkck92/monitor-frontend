@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-
 import StandbyHeader from '@/components/StandbyHeader.vue'
 import UnitGrid from '@/components/UnitGrid.vue';
 
 import type { Unit } from '@/types/api'
 
-const props = defineProps<{
+defineProps<{
   departmentName: string
   units: Unit[]
   connectionOk: boolean
