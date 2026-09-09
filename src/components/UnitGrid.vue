@@ -3,7 +3,7 @@ import type { Unit } from '@/types/api'
 
 import UnitCard from '@/components/UnitCard.vue'
 
-const props = withDefaults(defineProps<{
+withDefaults(defineProps<{
   vehicles: Unit[]
   showAlertState?: boolean
 }>(), { showAlertState: false })

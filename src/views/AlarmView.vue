@@ -4,7 +4,7 @@ import UnitGrid from '@/components/UnitGrid.vue';
 
 import type { Unit, Alarm } from '@/types/api'
 
-const props = defineProps<{
+defineProps<{
   alarm: Alarm
   units: Unit[]
 }>()
