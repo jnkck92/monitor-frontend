@@ -22,7 +22,6 @@ withDefaults(defineProps<{
   min-height: 0;
   display: grid;
   gap: clamp(0.4rem, 0.8vh, 1rem);
-  padding: clamp(0.5rem, 1vw, 1rem);
   background-color: var(--bg-surface);
 }
 

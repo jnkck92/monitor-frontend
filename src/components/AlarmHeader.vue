@@ -5,13 +5,6 @@ import type { Alarm } from '@/types/api'
 
 const props = defineProps<{ alarm: Alarm }>()
 
-const parsedTitle = computed(() => {
-  const title = props.alarm.title ?? ''
-  const [, code, description] = title.match(/^([A-Za-z]+\s*\d+)\s*-\s*(.+)$/) ?? []
-  if (code && description) return { code: code.trim(), description: description.trim() }
-  return { code: null, description: title }
-})
-
 const alarmDateObj = computed(() => props.alarm.timestamp ? new Date(props.alarm.timestamp) : null)
 
 const alarmTime = computed(() => {
@@ -29,14 +22,14 @@ const { elapsed } = useElapsed(() =>
 <template>
   <header class="header">
     <div class="priority-bar" :style="{ backgroundColor: alarm.color }">
-      <span v-if="parsedTitle.code">{{ parsedTitle.code }}</span>
-      <span v-if="alarm.label"> · {{ alarm.label }}</span>
-      <span v-else-if="parsedTitle.code" class="no-rule">Keine AAO hinterlegt</span>
+      <span>{{ alarm.label || 'Keine AAO hinterlegt' }}</span>
     </div>
 
     <div class="body">
-      <div class="keyword">{{ parsedTitle.description }}</div>
+      <div class="keyword">{{ alarm.keyword }}</div>
+      <p v-if="alarm.description" class="message">{{ alarm.description }}</p>
       <div v-if="alarm.address" class="address">{{ alarm.address }}</div>
+      <p v-if="alarm.hint" class="hint-text">{{ alarm.hint }}</p>
     </div>
 
     <div v-if="alarm.timestamp" class="kpi-strip">
@@ -87,6 +80,12 @@ const { elapsed } = useElapsed(() =>
   color: var(--text-secondary);
 }
 
+.message {
+  font-size: clamp(0.9rem, 2.5vw, 2.2rem);
+  color: var(--text-secondary);
+  line-height: 1.3;
+}
+
 .kpi-strip {
   display: flex;
   border-top: 1px solid var(--border-tile);
@@ -124,4 +123,11 @@ const { elapsed } = useElapsed(() =>
 .kpi-value.elapsed { color: var(--color-elapsed); }
 
 .no-rule { color: #fff; font-weight: 800; }
+
+
+.hint-text {
+  font-size: clamp(0.8rem, 1.6vw, 1.2rem);
+  color: var(--text-subtle);
+  font-style: italic;
+}
 </style>

@@ -4,9 +4,11 @@ import { useStatus } from '@/composables/useStatus'
 import StandbyView from './StandbyView.vue'
 import StateScreen from '@/components/StateScreen.vue'
 import AlarmView from './AlarmView.vue'
+import AlarmMapView from './AlarmMapView.vue'
+import InfoView from './InfoView.vue'
 import ConnectionStatusBar from '@/components/ConnectionStatusBar.vue'
 
-const { monitor, fetchError, loading, connectedSince, disconnectedSince } = useStatus()
+const { monitor, fetchError, loading, connectedSince, disconnectedSince, screen, view, tenant } = useStatus()
 const connectionOk = computed(() => fetchError.value === null)
 const connectionSince = computed(() => connectionOk.value ? connectedSince.value : disconnectedSince.value)
 
@@ -23,11 +25,21 @@ const units = computed(() => {
 <template>
 
   <div class="app-shell">
-
     <div class="content">
       <StateScreen v-if="loading && !monitor">Verbinde…</StateScreen>
 
-      <AlarmView v-else-if="monitor?.alarm" :alarm="monitor.alarm" :units="units" />
+      <template v-else-if="monitor?.alarm">
+        <AlarmMapView v-if="screen === 'large'" :alarm="monitor.alarm" :units="units" />
+        <AlarmView v-else :alarm="monitor.alarm" :units="units" />
+      </template>
+
+      <InfoView
+        v-else-if="monitor && view === 'info'"
+        :department-name="monitor.departmentName"
+        :connection-ok="connectionOk"
+        :units="units"
+        :tenant="tenant"
+      />
 
       <StandbyView
         v-else-if="monitor"
@@ -42,7 +54,6 @@ const units = computed(() => {
       </StateScreen>
 
     </div>
-
     <ConnectionStatusBar :connection-ok="connectionOk" :since="connectionSince" />
   </div>
 

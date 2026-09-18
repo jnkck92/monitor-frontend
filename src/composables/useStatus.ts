@@ -5,14 +5,18 @@ import { useConnectionTracking } from './useConnectionTracking'
 
 export function useStatus() {
   const route = useRoute()
-  const slug = route.params.slug as string
+  const tenant = route.params.slug as string
   const vehicleParam = route.query.vehicle
   const vehicle = Array.isArray(vehicleParam) ? vehicleParam[0] : vehicleParam
 
+  const screenParam = route.query.screen
+  const screen = (Array.isArray(screenParam) ? screenParam[0] : screenParam) === 'large' ? 'large' : 'small'
+
+  const viewParam = route.query.view
+  const view = (Array.isArray(viewParam) ? viewParam[0] : viewParam) === 'info' ? 'info' : 'status'
+
   const POLL_INTERVAL_MS = 5_000
-    const STATUS_URL = `/api/v1/monitor/${slug}/status${
-    vehicle ? `?vehicle=${encodeURIComponent(vehicle)}` : ''
-  }`
+  const STATUS_URL = `/api/v1/monitor/${tenant}/status`
 
   const monitor = ref<Monitor | null>(null)
   const fetchError = ref<string | null>(null)
@@ -26,7 +30,11 @@ export function useStatus() {
   function startPolling() {
     async function fetchStatus() {
       try {
-        const response = await fetch(STATUS_URL)
+        const response = await fetch(STATUS_URL, {
+          headers: {
+            ...(vehicle ? { 'X-Vehicle': vehicle } : {}),
+          },
+        })
         if (!response.ok) throw new Error(`HTTP ${response.status}`)
         monitor.value = (await response.json()) as Monitor
         fetchError.value = null
@@ -46,5 +54,5 @@ export function useStatus() {
     if (intervalId !== null) clearInterval(intervalId)
   })
 
-  return { monitor, fetchError, loading, connectedSince, disconnectedSince }
+  return { monitor, fetchError, loading, connectedSince, disconnectedSince, screen, view, tenant }
 }

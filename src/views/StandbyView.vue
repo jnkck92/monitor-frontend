@@ -14,7 +14,9 @@ defineProps<{
 <template>
   <div class="wrapper">
     <StandbyHeader :department-name="departmentName" :connection-ok="connectionOk" />
-    <UnitGrid :vehicles="units" />
+    <div class="content">
+      <UnitGrid :vehicles="units" />
+    </div>
   </div>
 </template>
 
@@ -25,4 +27,10 @@ defineProps<{
   height: 100%;
   overflow: hidden;
 }
+.content {
+  flex: 1;
+  display: flex;
+  padding: 1rem;
+}
+
 </style>
