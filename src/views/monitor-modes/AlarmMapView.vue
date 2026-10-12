@@ -2,8 +2,6 @@
 import AlarmHeader from '@/components/AlarmHeader.vue'
 import UnitGrid from '@/components/UnitGrid.vue'
 import AlarmMap from '@/components/AlarmMap.vue'
-// import WeatherWidget from '@/components/WeatherWidget.vue'
-//import AlarmResponses from '@/components/AlarmResponses.vue'
 
 import type { Unit, Alarm } from '@/types/api'
 
@@ -12,10 +10,6 @@ defineProps<{
   units: Unit[]
 }>()
 
-// Dummy-Werte, bis Backend location/weather liefert
-const dummyLocation = { lat: 53.1751688, lon: 8.7377744 }
-const dummyWeather = { tempC: 14, condition: 'Bewölkt', windKph: 12 }
-const dummyResponses = { coming: 8, notComing: 3, unknown: 5 }
 </script>
 
 <template>

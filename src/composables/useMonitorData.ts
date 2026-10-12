@@ -33,9 +33,7 @@ export function useMonitorData() {
     async function fetchStatus() {
       try {
         const response = await fetch(STATUS_URL, {
-          headers: {
-            ...(vehicle ? { 'X-Vehicle': vehicle } : {}),
-          },
+          headers: vehicle ? { 'X-Vehicle': vehicle } : {},
         })
         if (!response.ok) throw new Error(`HTTP ${response.status}`)
         monitor.value = (await response.json()) as Monitor
