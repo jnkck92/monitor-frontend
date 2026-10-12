@@ -12,7 +12,6 @@ const props = defineProps<{
 }>()
 
 const hasCoords = computed(() => props.alarm.lat != null && props.alarm.lon != null)
-
 </script>
 
 <template>
@@ -22,14 +21,16 @@ const hasCoords = computed(() => props.alarm.lat != null && props.alarm.lon != n
       <UnitGrid class="units" :units="units" show-alert-state />
       <div class="side">
         <div class="map-block">
-  <AlarmMap v-if="hasCoords" :lat="alarm.lat!" :lon="alarm.lon!" />
-  <div v-else class="map-empty">
-    <span class="map-empty-title">Keine Kartenposition</span>
-    <span v-if="alarm.address" class="map-empty-text">{{ alarm.address }}</span>
-    <span v-else class="map-empty-text">Es wurde kein Standort übermittelt</span>
-  </div>
-  <span v-if="hasCoords && alarm.address" class="address">{{ alarm.address }}</span>
-</div>
+          <div v-if="hasCoords && alarm.address" class="address">
+            <span class="street">{{ alarm.address }}</span>
+          </div>
+          <AlarmMap v-if="hasCoords" :lat="alarm.lat!" :lon="alarm.lon!" />
+          <div v-else class="map-empty">
+            <span class="map-empty-title">Keine Kartenposition</span>
+            <span v-if="alarm.address" class="map-empty-text">{{ alarm.address }}</span>
+            <span v-else class="map-empty-text">Es wurde kein Standort übermittelt</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -57,7 +58,7 @@ const hasCoords = computed(() => props.alarm.lat != null && props.alarm.lon != n
 }
 
 .side {
-  flex: 1;
+  flex: 1.1;
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -73,11 +74,18 @@ const hasCoords = computed(() => props.alarm.lat != null && props.alarm.lon != n
 }
 
 .address {
-  font-size: clamp(1rem, 2vw, 1.6rem);
-  font-weight: 600;
-  color: var(--text-bright);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
+  line-height: 1.15;
+  padding: 0.5rem 1rem;
+  color: #fff;
+  background: var(--color-alarm, #1a6bff);
+  border-radius: var(--border-radius);
 }
+.street { font-size: clamp(1.6rem, 4vw, 3.4rem); font-weight: 800; }
+.city   { font-size: clamp(1rem, 2vw, 1.6rem); font-weight: 600; opacity: 0.9; }
 
 .map-empty {
   flex: 1;
