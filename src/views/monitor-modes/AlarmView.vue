@@ -1,22 +1,22 @@
 <script setup lang="ts">
-import StandbyHeader from '@/components/StandbyHeader.vue'
+import AlarmHeader from '@/components/AlarmHeader.vue'
 import UnitGrid from '@/components/UnitGrid.vue';
 
-import type { Unit } from '@/types/api'
+import type { Unit, Alarm } from '@/types/api'
 
 defineProps<{
-  departmentName: string
+  alarm: Alarm
   units: Unit[]
-  connectionOk: boolean
 }>()
 </script>
 
 <template>
   <div class="wrapper">
-    <StandbyHeader :department-name="departmentName" :connection-ok="connectionOk" />
-    <div class="content">
-      <UnitGrid :vehicles="units" />
+    <AlarmHeader :alarm="alarm" :show-address="true" />
+    <div class="unitGridWrapper">
+      <UnitGrid :units="units" show-alert-state/>
     </div>
+
   </div>
 </template>
 
@@ -27,10 +27,12 @@ defineProps<{
   height: 100%;
   overflow: hidden;
 }
-.content {
-  flex: 1;
+
+.unitGridWrapper{
   display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
   padding: 1rem;
 }
-
 </style>

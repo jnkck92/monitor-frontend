@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import { useElapsed } from '@/composables/useElapsed'
 import type { Alarm } from '@/types/api'
 
-const props = defineProps<{ alarm: Alarm }>()
+const props = defineProps<{ alarm: Alarm, showAddress: boolean }>()
 
 const alarmDateObj = computed(() => props.alarm.timestamp ? new Date(props.alarm.timestamp) : null)
 
@@ -28,7 +28,7 @@ const { elapsed } = useElapsed(() =>
     <div class="body">
       <div class="keyword">{{ alarm.keyword }}</div>
       <p v-if="alarm.description" class="message">{{ alarm.description }}</p>
-      <div v-if="alarm.address" class="address">{{ alarm.address }}</div>
+      <div v-if="alarm.address && showAddress" class="address">{{ alarm.address }}</div>
       <p v-if="alarm.hint" class="hint-text">{{ alarm.hint }}</p>
     </div>
 
@@ -48,7 +48,7 @@ const { elapsed } = useElapsed(() =>
   display: flex;
   flex-direction: column;
   background-color: var(--bg-surface);
-  border-bottom: 1px solid var(--border-tile);
+  padding: 1rem;
 }
 
 .priority-bar {
@@ -88,7 +88,9 @@ const { elapsed } = useElapsed(() =>
 
 .kpi-strip {
   display: flex;
-  border-top: 1px solid var(--border-tile);
+  border: 1px solid var(--border-tile);
+  border-radius: var(--border-radius);
+  padding: 5px;
 }
 
 .kpi {
@@ -99,7 +101,6 @@ const { elapsed } = useElapsed(() =>
   justify-content: center;
   gap: 0.4em;
   padding: clamp(0.25rem, 0.6vh, 0.5rem);
-  border-right: 1px solid var(--border-tile);
 }
 
 .kpi:last-child { border-right: none; }

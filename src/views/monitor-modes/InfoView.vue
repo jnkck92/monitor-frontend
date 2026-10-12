@@ -21,7 +21,7 @@ const { news, events } = useInfo(props.tenant)
   <div class="wrapper">
     <StandbyHeader :department-name="departmentName" :connection-ok="connectionOk" />
     <div class="content">
-      <UnitGrid class="units" :vehicles="units" />
+      <UnitGrid class="units" :units="units" />
       <div class="side">
         <section class="column">
           <h2 class="section-title">Termine</h2>

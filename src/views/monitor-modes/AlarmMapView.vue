@@ -2,7 +2,7 @@
 import AlarmHeader from '@/components/AlarmHeader.vue'
 import UnitGrid from '@/components/UnitGrid.vue'
 import AlarmMap from '@/components/AlarmMap.vue'
-import WeatherWidget from '@/components/WeatherWidget.vue'
+// import WeatherWidget from '@/components/WeatherWidget.vue'
 //import AlarmResponses from '@/components/AlarmResponses.vue'
 
 import type { Unit, Alarm } from '@/types/api'
@@ -20,17 +20,15 @@ const dummyResponses = { coming: 8, notComing: 3, unknown: 5 }
 
 <template>
   <div class="wrapper">
-    <AlarmHeader :alarm="alarm" />
+    <AlarmHeader :alarm="alarm" :show-address="false" />
     <div class="content">
-      <UnitGrid class="units" :vehicles="units" show-alert-state />
+      <UnitGrid class="units" :units="units" show-alert-state />
       <div class="side">
-        <!--<AlarmResponses :responses="alarm.responses ?? dummyResponses" />-->
         <div class="map-block">
           <AlarmMap v-if="alarm.lat != null && alarm.lon != null" :lat="alarm.lat" :lon="alarm.lon" />
           <div v-else class="map-pending">Standort wird ermittelt …</div>
           <span v-if="alarm.address" class="address">{{ alarm.address }}</span>
         </div>
-        <WeatherWidget :weather="alarm.weather ?? dummyWeather" />
       </div>
     </div>
   </div>

@@ -3,17 +3,11 @@ import type { Monitor } from '@/types/api'
 import { useRoute } from 'vue-router'
 import { useConnectionTracking } from './useConnectionTracking'
 
-export function useStatus() {
+export function useMonitorData() {
   const route = useRoute()
   const tenant = route.params.slug as string
   const vehicleParam = route.query.vehicle
   const vehicle = Array.isArray(vehicleParam) ? vehicleParam[0] : vehicleParam
-
-  const screenParam = route.query.screen
-  const screen = (Array.isArray(screenParam) ? screenParam[0] : screenParam) === 'large' ? 'large' : 'small'
-
-  const viewParam = route.query.view
-  const view = (Array.isArray(viewParam) ? viewParam[0] : viewParam) === 'info' ? 'info' : 'status'
 
   const POLL_INTERVAL_MS = 5_000
   const STATUS_URL = `/api/v1/monitor/${tenant}/status`
@@ -24,6 +18,14 @@ export function useStatus() {
 
   const connectionOk = computed(() => fetchError.value === null)
   const { connectedSince, disconnectedSince } = useConnectionTracking(connectionOk)
+
+  const units = computed(() => {
+    if (!monitor.value) return []
+    return [
+      ...monitor.value.vehicles.map(v => ({ ...v, type: 'vehicle' as const })),
+      ...monitor.value.persons.map(p => ({ ...p, type: 'person' as const })),
+    ]
+  })
 
   let intervalId: ReturnType<typeof setInterval> | null = null
 
@@ -54,5 +56,5 @@ export function useStatus() {
     if (intervalId !== null) clearInterval(intervalId)
   })
 
-  return { monitor, fetchError, loading, connectedSince, disconnectedSince, screen, view, tenant }
+  return { monitor, fetchError, loading, connectionOk, connectedSince, disconnectedSince, tenant, units }
 }
