@@ -36,8 +36,8 @@ onMounted(() => {
   const icon = L.divIcon({
     className: 'alarm-pin',
     html: '<span class=""></span><span class="pin"></span>',
-    iconSize: [40, 40],
-    iconAnchor: [20, 40],
+    iconSize: [72, 60],
+    iconAnchor: [36, 53],
   })
   marker = L.marker([props.lat, props.lon], { icon, interactive: false }).addTo(map)
 })
@@ -64,17 +64,20 @@ watch(() => [props.lat, props.lon] as const, ([lat, lon]) => {
 
 .map :deep(.alarm-pin) { position: relative; }
 .map :deep(.pin) {
-  position: absolute; left: 8px; top: 0;
-  width: 24px; height: 24px;
-  background: #ef4444; border: 3px solid #fff;
+  position: absolute; left: 14px; top: 0;
+  width: 44px; height: 44px;
+  background: #ef4444; border: 5px solid #fff;
   border-radius: 50% 50% 50% 0; transform: rotate(-45deg);
-  box-shadow: 0 2px 6px rgb(0 0 0 / .5);
+  box-shadow: 0 3px 10px rgb(0 0 0 / .6);
+}
+.map :deep(.pin)::after {
+  content: ''; position: absolute; inset: 25%;
+  background: #fff; border-radius: 50%;
 }
 .map :deep(.pulse) {
-  position: absolute; left: 0; bottom: -6px;
-  width: 40px; height: 14px; border-radius: 50%;
+  position: absolute; left: 0; top: 41px;
+  width: 72px; height: 24px; border-radius: 50%;
   background: rgb(239 68 68 / .5);
   animation: pulse 1.6s ease-out infinite;
 }
-@keyframes pulse { from { transform: scale(.3); opacity: 1 } to { transform: scale(1.6); opacity: 0 } }
 </style>
