@@ -12,8 +12,6 @@ const props = defineProps<{
 }>()
 
 const hasCoords = computed(() => props.alarm.lat != null && props.alarm.lon != null)
-const street = computed(() => props.alarm.address?.split(',')[0]?.trim() ?? '')
-const city = computed(() => props.alarm.address?.split(',').slice(1).join(',').trim() ?? '')
 </script>
 
 <template>
@@ -24,8 +22,7 @@ const city = computed(() => props.alarm.address?.split(',').slice(1).join(',').t
       <div class="side">
         <div class="map-block">
           <div v-if="hasCoords && alarm.address" class="address">
-            <span class="street">{{ street }}</span>
-            <span v-if="city" class="city">{{ city }}</span>
+            <span class="street">{{ alarm.address }}</span>
           </div>
           <AlarmMap v-if="hasCoords" :lat="alarm.lat!" :lon="alarm.lon!" />
           <div v-else class="map-empty">
