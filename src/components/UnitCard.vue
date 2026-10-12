@@ -5,14 +5,15 @@ import Badge from '@/components/BadgeComponent.vue'
 withDefaults(defineProps<{
   unit: Unit
   showAlertState?: boolean
-}>(), { showAlertState: false })
+  compact?: boolean
+}>(), { showAlertState: false, compact: false })
 </script>
 
 <template>
-  <div class="card" :class="{ inactive: showAlertState && !unit.alerted, own: unit.ownVehicle }" :style="{ '--status-color': unit.radioStatus.color }">
+  <div class="card" :class="{ inactive: showAlertState && !unit.alerted, own: unit.ownVehicle, compact }" :style="{ '--status-color': unit.radioStatus.color }">
     <div class="info">
-      <Badge>{{ unit.callSign }}</Badge>
-      <span class="name">{{ unit.name }}</span>
+      <Badge v-if="!compact">{{ unit.callSign }}</Badge>
+      <Badge :color="'white'">{{ unit.name }}</Badge>
     </div>
     <Badge v-if="unit.radioStatus !== null" :color="unit.radioStatus.color">
       {{ unit.radioStatus.label }}
@@ -50,18 +51,6 @@ withDefaults(defineProps<{
   overflow: hidden;
 }
 
-.name {
-  font-size: 200cqh;
-  line-height: 1;
-  font-weight: 400;
-  color: var(--text-bright);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  flex: 1;
-  min-width: 0;
-}
-
 .card.inactive {
   opacity: 0.2;
   filter: grayscale(60%);
@@ -69,4 +58,19 @@ withDefaults(defineProps<{
 
 .card.type-person  { border-left: 3px solid var(--color-person); }
 .card.type-vehicle { border-left: 3px solid var(--color-vehicle); }
+
+.card.compact {
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.3rem;
+  container-type: normal;
+  font-size: 0.8em;
+  text-align: center;
+}
+
+.card.compact .info {
+  flex: none;
+  justify-content: center;
+}
 </style>

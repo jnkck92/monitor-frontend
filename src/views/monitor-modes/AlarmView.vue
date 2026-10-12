@@ -12,8 +12,11 @@ defineProps<{
 
 <template>
   <div class="wrapper">
-    <AlarmHeader :alarm="alarm" />
-    <UnitGrid :vehicles="units" show-alert-state/>
+    <AlarmHeader :alarm="alarm" :show-address="true" />
+    <div class="unitGridWrapper">
+      <UnitGrid :units="units" show-alert-state/>
+    </div>
+
   </div>
 </template>
 
@@ -23,5 +26,13 @@ defineProps<{
   flex-direction: column;
   height: 100%;
   overflow: hidden;
+}
+
+.unitGridWrapper{
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  padding: 1rem;
 }
 </style>
