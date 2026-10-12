@@ -1,14 +1,17 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import AlarmHeader from '@/components/AlarmHeader.vue'
 import UnitGrid from '@/components/UnitGrid.vue'
 import AlarmMap from '@/components/AlarmMap.vue'
 
 import type { Unit, Alarm } from '@/types/api'
 
-defineProps<{
+const props = defineProps<{
   alarm: Alarm
   units: Unit[]
 }>()
+
+const hasCoords = computed(() => props.alarm.lat != null && props.alarm.lon != null)
 
 </script>
 
@@ -19,10 +22,14 @@ defineProps<{
       <UnitGrid class="units" :units="units" show-alert-state />
       <div class="side">
         <div class="map-block">
-          <AlarmMap v-if="alarm.lat != null && alarm.lon != null" :lat="alarm.lat" :lon="alarm.lon" />
-          <div v-else class="map-pending">Standort wird ermittelt …</div>
-          <span v-if="alarm.address" class="address">{{ alarm.address }}</span>
-        </div>
+  <AlarmMap v-if="hasCoords" :lat="alarm.lat!" :lon="alarm.lon!" />
+  <div v-else class="map-empty">
+    <span class="map-empty-title">Keine Kartenposition</span>
+    <span v-if="alarm.address" class="map-empty-text">{{ alarm.address }}</span>
+    <span v-else class="map-empty-text">Es wurde kein Standort übermittelt</span>
+  </div>
+  <span v-if="hasCoords && alarm.address" class="address">{{ alarm.address }}</span>
+</div>
       </div>
     </div>
   </div>
@@ -71,4 +78,20 @@ defineProps<{
   color: var(--text-bright);
   text-align: center;
 }
+
+.map-empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  text-align: center;
+  padding: 1rem;
+  border: 1px dashed var(--border-faint);
+  border-radius: var(--border-radius);
+  color: var(--text-subtle);
+}
+.map-empty-title { font-size: clamp(1rem, 2vw, 1.6rem); text-transform: uppercase; letter-spacing: .05em; }
+.map-empty-text { font-size: clamp(1.2rem, 3vw, 2.6rem); color: var(--text-bright); }
 </style>
