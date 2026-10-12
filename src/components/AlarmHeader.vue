@@ -24,7 +24,6 @@ const { elapsed } = useElapsed(() =>
     <div class="priority-bar" :style="{ backgroundColor: alarm.color }">
       <span>{{ alarm.label || 'Keine AAO hinterlegt' }}</span>
     </div>
-
     <div class="body">
       <div class="keyword">{{ alarm.keyword }}</div>
       <p v-if="alarm.description" class="message">{{ alarm.description }}</p>
