@@ -21,6 +21,7 @@ export interface Alarm {
   lon?: number | null
   weather?: Weather | null
   responses?: AlarmResponses | null
+  audioUrl?: string | null
 }
 
 export interface RadioStatus {

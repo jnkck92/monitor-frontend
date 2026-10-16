@@ -4,8 +4,10 @@ import MonitorShell from '@/components/MonitorShell.vue'
 import AlarmSwitcher from '@/components/AlarmSwitcher.vue'
 import AlarmMapView from '@/views/monitor-modes/AlarmMapView.vue'
 import InfoView from './monitor-modes/InfoView.vue'
+import { useAlarmSound } from '@/composables/useAlarmSound'
 
 const { monitor, loading, connectionOk, connectedSince, disconnectedSince, units, tenant } = useMonitorData()
+useAlarmSound(monitor, tenant)
 </script>
 
 <template>
